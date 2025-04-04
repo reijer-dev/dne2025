@@ -55,7 +55,7 @@ class RagEvaluater:
         
     def evaluate_inference(self):
         self.__ensure_questions()
-        questions = json.loads(open(self.questions_file, "r").read())
+        questions = json.loads(open(self.questions_file, "r").read())[:30]
         for rag_system in self.rag_systems:
             i = 0
             self.inference_doc_scores[rag_system.name] = []
@@ -89,9 +89,9 @@ class RagEvaluater:
 
         with open(f"evaluation-inference-{time.time()}.csv", "w", newline="", encoding="utf-8") as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow(["rag_system","question_amount","avg_time", "avg_doc_score", "avg_global_score"])
+            writer.writerow(["rag_system","avg_time", "doc_questions", "avg_doc_score", "global_questions", "avg_global_score"])
             for rag_system in self.rag_systems:
-                writer.writerow([rag_system.name,len(questions),np.mean(self.inference_times[rag_system.name]),np.mean(self.inference_doc_scores[rag_system.name]),np.mean(self.inference_global_scores[rag_system.name])])
+                writer.writerow([rag_system.name,np.mean(self.inference_times[rag_system.name]),len(self.inference_doc_scores[rag_system.name]),np.mean(self.inference_doc_scores[rag_system.name]),len(self.inference_global_scores[rag_system.name]),np.mean(self.inference_global_scores[rag_system.name])])
         
     def __ensure_questions(self):
         questions = json.loads(open(self.questions_file, "r").read())
