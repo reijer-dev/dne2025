@@ -13,4 +13,4 @@ class VoidRag(RagSystem):
         pass
 
     def query(self, question) -> str:
-        pass
+        return ""
